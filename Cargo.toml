@@ -1,7 +1,7 @@
 [package]
 name = "bevy_skybox_cubemap"
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
 authors = ["Zachary Stewart <zstewart@google.com>"]
 description = "Cubemap-based Skyboxes for Bevy Engine."
 homepage = "https://github.com/google/bevy_skybox_cubemap"
