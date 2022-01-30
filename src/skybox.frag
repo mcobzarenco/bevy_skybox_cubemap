@@ -13,15 +13,23 @@
 // limitations under the License.
 
 #version 450
+
+#define SKYBOXMATERIAL_TEXTURE
+
 layout(location = 0) in vec3 TexCoords;
 
-layout(set = 2, binding = 0) uniform SkyboxMaterial_color {
-    vec4 color;
+layout(set = 1, binding = 0) uniform CustomMaterial {
+  vec4 color;
 };
-#ifdef SKYBOXMATERIAL_TEXTURE
-layout(set = 2, binding = 1) uniform texture2DArray SkyboxMaterial_texture;
-layout(set = 2, binding = 2) uniform sampler SkyboxMaterial_texture_sampler;
-#endif
+
+// layout(set = 2, binding = 0) uniform SkyboxMaterial_color {
+//     vec4 color;
+// };
+
+// #ifdef SKYBOXMATERIAL_TEXTURE
+layout(set = 1, binding = 1) uniform texture2DArray SkyboxMaterial_texture;
+layout(set = 1, binding = 2) uniform sampler SkyboxMaterial_texture_sampler;
+// #endif
 
 layout(location = 0) out vec4 o_Target;
 
@@ -52,19 +60,14 @@ vec3 sampleCubeHacky(const vec3 ray) {
 }
 
 void main() {
-#ifdef SKYBOXMATERIAL_TEXTURE
+// #ifdef SKYBOXMATERIAL_TEXTURE
     vec3 uvIndex = sampleCubeHacky(TexCoords);
     o_Target = texture(
         sampler2DArray(SkyboxMaterial_texture, SkyboxMaterial_texture_sampler),
         uvIndex
     ) * color;
-
-    // This is how this should work.
-    // o_Target = texture(
-    //     samplerCube(SkyboxMaterial_texture, SkyboxMaterial_texture_sampler),
-    //     TexCoords
-    // ) * color;
-#else
-    o_Target = color;
-#endif
+// #else
+    // o_Target = color;
+    // o_Target = vec4(depth, depth, depth, 1.0);
+// #endif
 }

@@ -12,18 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 use bevy::prelude::*;
 use bevy::render::camera::{Camera, PerspectiveProjection};
 use bevy_skybox_cubemap::{SkyboxBundle, SkyboxMaterial, SkyboxPlugin, SkyboxTextureConversion};
 
 fn main() {
-    App::build()
+    App::new()
         .insert_resource(ClearColor(Color::PINK))
         .insert_resource(Msaa { samples: 4 })
         .add_plugins(DefaultPlugins)
+        .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        .add_plugin(LogDiagnosticsPlugin::default())
         .add_plugin(SkyboxPlugin)
-        .add_startup_system(setup.system())
-        .add_system(spin_camera.system())
+        .add_startup_system(setup)
+        .add_system(spin_camera)
         .run();
 }
 
@@ -67,7 +70,7 @@ fn setup(
         material: materials.add(Color::rgb(0.3, 0.5, 0.3).into()),
         ..Default::default()
     });
-    // plane
+    // sphere
     let sphere = meshes.add(Mesh::from(shape::Icosphere {
         radius: 0.25,
         subdivisions: 4,
@@ -101,7 +104,7 @@ fn setup(
         ..Default::default()
     });
     // light
-    commands.spawn_bundle(LightBundle {
+    commands.spawn_bundle(PointLightBundle {
         transform: Transform::from_xyz(4.0, 8.0, 4.0),
         ..Default::default()
     });
